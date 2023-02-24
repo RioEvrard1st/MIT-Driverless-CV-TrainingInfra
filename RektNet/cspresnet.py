@@ -5,9 +5,9 @@ def print_tensor_stats(x, name):
     avg = sum(flattened_x)/len(flattened_x)
     print(f"\t\t\t\t{name}: {round(avg,10)},{round(min(flattened_x),10)},{round(max(flattened_x),10)}")
 
-class CSPResNetBlock(nn.Module):
+class CSPResNet(nn.Module):
     def __init__(self, in_channels, out_channels):
-        super(CSPResNetBlock, self).__init__()
+        super(CSPResNet, self).__init__()
         
         # First convolutional block
         self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=out_channels//2, kernel_size=1, stride=1, padding=0)
