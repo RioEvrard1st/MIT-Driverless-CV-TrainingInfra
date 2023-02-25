@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch
 import torch.nn.functional
-#from resnet import ResNet
+from resnet import ResNet
 from cspresnet import CSPResNet
 from cross_ratio_loss import CrossRatioLoss
 
@@ -19,10 +19,14 @@ class KeypointNet(nn.Module):
         # torch.nn.init.xavier_uniform(self.conv.weight)
         self.bn = nn.BatchNorm2d(net_size)
         self.relu = nn.ReLU()
-        self.res1 = CSPResNet(net_size, net_size)
-        self.res2 = CSPResNet(net_size, net_size * 2)
-        self.res3 = CSPResNet(net_size * 2, net_size * 4)
-        self.res4 = CSPResNet(net_size * 4, net_size * 8)
+#         self.res1 = CSPResNet(net_size, net_size)
+#         self.res2 = CSPResNet(net_size, net_size * 2)
+#         self.res3 = CSPResNet(net_size * 2, net_size * 4)
+#         self.res4 = CSPResNet(net_size * 4, net_size * 8)
+        self.res1 = ResNet(net_size, net_size)
+        self.res2 = ResNet(net_size, net_size * 2)
+        self.res3 = ResNet(net_size * 2, net_size * 4)
+        self.res4 = ResNet(net_size * 4, net_size * 8)
         self.out = nn.Conv2d(in_channels=net_size * 8, out_channels=num_kpt, kernel_size=1, stride=1, padding=0)
         # torch.nn.init.xavier_uniform(self.out.weight)
         if init_weight:
