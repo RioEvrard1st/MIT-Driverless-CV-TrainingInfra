@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 
 def print_tensor_stats(x, name):
