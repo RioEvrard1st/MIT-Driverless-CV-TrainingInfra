@@ -10,41 +10,65 @@ class CSPResNet(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(CSPResNet, self).__init__()
         
-        # First convolutional block
-        self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=out_channels//2, kernel_size=1, stride=1, padding=0)
-        self.bn1 = nn.BatchNorm2d(out_channels//2)
+#         # First convolutional block
+#         self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=out_channels//2, kernel_size=1, stride=1, padding=0)
+#         self.bn1 = nn.BatchNorm2d(out_channels//2)
+#         self.relu1 = nn.ReLU()
+#         self.conv2 = nn.Conv2d(in_channels=out_channels//2, out_channels=out_channels//2, kernel_size=3, stride=1, padding=1, bias=False)
+#         self.bn2 = nn.BatchNorm2d(out_channels//2)
+        
+#         # Second convolutional block
+#         self.conv3 = nn.Conv2d(in_channels=in_channels, out_channels=out_channels//2, kernel_size=1, stride=1, padding=0)
+#         self.bn3 = nn.BatchNorm2d(out_channels//2)
+#         self.relu3 = nn.ReLU()
+#         self.conv4 = nn.Conv2d(in_channels=out_channels//2, out_channels=out_channels//2, kernel_size=3, stride=1, padding=1, bias=False)
+#         self.bn4 = nn.BatchNorm2d(out_channels//2)
+        
+#         # Final convolutional layer
+#         self.conv5 = nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=1, stride=1, padding=0)
+#         self.bn5 = nn.BatchNorm2d(out_channels)
+#         self.relu5 = nn.ReLU()
+
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=1, padding=1)
+        self.bn1 = nn.BatchNorm2d(out_channels)
         self.relu1 = nn.ReLU()
-        self.conv2 = nn.Conv2d(in_channels=out_channels//2, out_channels=out_channels//2, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn2 = nn.BatchNorm2d(out_channels//2)
-        
-        # Second convolutional block
-        self.conv3 = nn.Conv2d(in_channels=in_channels, out_channels=out_channels//2, kernel_size=1, stride=1, padding=0)
-        self.bn3 = nn.BatchNorm2d(out_channels//2)
-        self.relu3 = nn.ReLU()
-        self.conv4 = nn.Conv2d(in_channels=out_channels//2, out_channels=out_channels//2, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn4 = nn.BatchNorm2d(out_channels//2)
-        
-        # Final convolutional layer
-        self.conv5 = nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=1, stride=1, padding=0)
-        self.bn5 = nn.BatchNorm2d(out_channels)
-        self.relu5 = nn.ReLU()
+
+        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1)
+        self.bn2 = nn.BatchNorm2d(out_channels)
+
+        self.conv3 = nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1)
+        self.bn3 = nn.BatchNorm2d(out_channels)
+
+        self.relu2 = nn.ReLU()
         
     def forward(self, x):
-        # First convolutional block
-        c1 = self.conv1(x)
-        b1 = self.bn1(c1)
-        act1 = self.relu1(b1)
-        c2 = self.conv2(act1)
-        b2 = self.bn2(c2)
+#         # First convolutional block
+#         c1 = self.conv1(x)
+#         b1 = self.bn1(c1)
+#         act1 = self.relu1(b1)
+#         c2 = self.conv2(act1)
+#         b2 = self.bn2(c2)
         
-        # Second convolutional block
-        c3 = self.conv3(x)
-        b3 = self.bn3(c3)
-        act3 = self.relu3(b3)
-        c4 = self.conv4(act3)
-        b4 = self.bn4(c4)
+#         # Second convolutional block
+#         c3 = self.conv3(x)
+#         b3 = self.bn3(c3)
+#         act3 = self.relu3(b3)
+#         c4 = self.conv4(act3)
+#         b4 = self.bn4(c4)
         
-        # Concatenation and final convolution
-        out = self.relu5(self.bn5(self.conv5(torch.cat((b2, b4), dim=1))))
+#         # Concatenation and final convolution
+#         out = self.relu5(self.bn5(self.conv5(torch.cat((b2, b4), dim=1))))
+
+        x1 = self.conv1(x)
+        x1 = self.bn1(x1)
+        x1 = self.relu1(x1)
+
+        x2 = self.conv2(x1)
+        x2 = self.bn2(x2)
+
+        x3 = self.conv3(x)
+        x3 = self.bn3(x3)
+        
+        out = self.relu2(x2 + x3)
         
         return out
