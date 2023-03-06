@@ -86,6 +86,19 @@ The forward() method of this loss function takes in four tensors as inputs: heat
 
 The function computes the loss based on the selected loss_type. If the loss_type is 'l2_softargmax' or 'l2_sm', it computes the mean squared error (MSE) loss between the predicted and target x,y locations. If the loss_type is 'l2_heatmap' or 'l2_hm', it computes the MSE loss between the predicted and target heatmaps. If the loss_type is 'l1_softargmax' or 'l1_sm', it computes the mean absolute error (MAE) loss between the predicted and target x,y locations.
 
+here are three different types of loss functions that can be used, each with their own strengths and weaknesses:
+
+    L2 Softargmax or L2 SM:
+    This loss function calculates the mean squared error (MSE) between the predicted locations of the points and the ground truth locations. The difference is first squared and then summed across all dimensions except the batch dimension. This loss function is good at penalizing large errors, but it can be sensitive to outliers.
+
+    L2 Heatmap or L2 HM:
+    This loss function also calculates the mean squared error between the predicted heatmap and the ground truth heatmap. The difference is first squared and then summed across all dimensions except the batch dimension and channel dimension. This loss function is good at handling small errors and can be more robust to outliers than L2 Softargmax.
+
+    L1 Softargmax or L1 SM:
+    This loss function calculates the mean absolute error (MAE) between the predicted locations of the points and the ground truth locations. The difference is first taken in absolute value and then summed across all dimensions except the batch dimension. This loss function is less sensitive to outliers than L2 Softargmax but can be less effective at penalizing large errors.
+
+In summary, L2 Softargmax is good at penalizing large errors, L2 Heatmap is good at handling small errors and can be more robust to outliers, while L1 Softargmax is less sensitive to outliers but can be less effective at penalizing large errors.
+
 If include_geo is True, the function also computes a geometric loss based on the co-linearity of the points along the side of the cone and the horizontal lines on the cone. This geometric loss is added to the location loss to get the total loss.
 
 Finally, the function returns three values: the location loss, the geometric loss, and the total loss (which is the sum of the location and geometric losses).
